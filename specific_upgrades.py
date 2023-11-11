@@ -1,10 +1,8 @@
 import numpy as np
 
-from artifact import Artifact
+from artifact_logic.artifact import Artifact
 from formulas.Furina import furina_optim
 from load_from_GO import get_art_from_JSON
-from optim_func import average_upgrade_benefit
-from joblib import Parallel, delayed
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 
@@ -63,15 +61,6 @@ if __name__ == "__main__":
             artifact_benefits[j, i] = optim_func(art)
 
     artifact_benefits = artifact_benefits - current_damage
-    """
-    #benefit_damage[benefit_damage > 0]
-    plt.hist(artifact_benefits, bins=100, density=True)
-    plt.xlabel("Increase in damage")
-    plt.ylabel("Number of artifacts")
-    plt.xlim(0)
-    #plt.ylim(1-(benefit_damage>0).mean(), 1.1)
-    plt.show()
-    """
 
     for j, artifact_type in tqdm(enumerate(all_artifacts)):
         plt.hist(artifact_benefits[j], bins=N//100, density=True, cumulative=True, histtype='step', label=artifact_type)

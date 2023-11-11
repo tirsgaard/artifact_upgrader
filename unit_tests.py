@@ -2,9 +2,8 @@
 # Run with: pytest unit_tests.py
 # Run with coverage: pytest --cov=unit_tests.py
 import pytest
-import os
 import numpy as np
-from artifact import Artifact
+from artifact_logic.artifact import Artifact
 
 @pytest.fixture
 def test_artifact():

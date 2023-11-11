@@ -1,4 +1,4 @@
-from artifact import Artifact, SubStat
+from artifact_logic.artifact import Artifact, SubStat
 import numpy as np
 from optim_func import place_holder_optim
 

@@ -1,7 +1,7 @@
-from artifact import Artifact, SubStat
+from artifact_logic.artifact import Artifact, SubStat
 import numpy as np
 
-from constants import sub_stat_rolls, sub_stat_chances
+from artifact_logic.constants import sub_stat_rolls, sub_stat_chances
 from upgrade_comb_const import upgrade_sets
 # Use pycharm inline timer
 
