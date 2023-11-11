@@ -1,6 +1,5 @@
 import numpy as np
-from constants import main_level_stats, sub_stat_chances, sub_stat_rolls
-from upgrade_comb_const import upgrade_sets
+from src.artifact_logic.constants import main_level_stats, sub_stat_chances, sub_stat_rolls
 from line_profiler_pycharm import profile
 
 class MainStat:

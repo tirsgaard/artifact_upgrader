@@ -1,6 +1,6 @@
 import json
-from artifact_logic.artifact import Artifact, SubStat
-from artifact_logic.constants import GO_conversion_dict
+from src.artifact_logic.artifact import Artifact, SubStat
+from src.artifact_logic.constants import GO_conversion_dict
 
 def convert_stats(stat):
     """ This function converts a stat from Genshin Optimizer to this projects format"""
