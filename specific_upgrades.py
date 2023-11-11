@@ -2,7 +2,7 @@ import numpy as np
 
 from artifact_logic.artifact import Artifact
 from formulas.Furina import furina_optim
-from load_from_GO import get_art_from_JSON
+from io.load_from_GO import get_art_from_JSON
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 
