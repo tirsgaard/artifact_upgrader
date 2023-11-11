@@ -120,10 +120,7 @@ def benefit_rolls(artifact, upgrade_list, opt_function, current_opt):
     new_artifact = artifact.__copy__()
     for i, upgrade in enumerate(upgrades):
         # Get value of new roll
-        try:
-            value = max(sub_stat_rolls[new_artifact.substats[upgrade].type])
-        except:
-            test = 2
+        value = max(sub_stat_rolls[new_artifact.substats[upgrade].type])
         new_artifact.substats[upgrade].upgrade(value=value)
 
     # calculate benefit
