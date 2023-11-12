@@ -1,11 +1,9 @@
 import numpy as np
 
 from src.artifact_logic.artifact import Artifact
-from src.formulas.Furina import calculate_mademoiselle_crabaletta_dmg, calculate_multi_object_target_damage
-from src.formulas.Kokomi import calculate_1_hit_dmg
-from src.formulas.YaeMiko import calculate_sesshou_sakura_dmg_level_3
+from src.artifact_progression import plot_damage_over_time
+from src.formulas.Furina import calculate_mademoiselle_crabaletta_dmg
 from src.formulas.default import prepare_artifacts
-from src.formulas.test_func import calculate_new_custom_target_damage
 from src.io.load_from_GO import get_art_from_JSON
 from tqdm import tqdm
 import matplotlib.pyplot as plt
@@ -42,6 +40,12 @@ if __name__ == "__main__":
     plt.xlabel("Increase in damage")
     plt.ylabel("CDF of artifacts")
     plt.xlim(0)
-    #plt.ylim(1 - (artifact_benefits > 0).mean(axis=1).max(), 1.01)
+    plt.ylim(1 - (artifact_benefits > 0).mean(axis=1).max(), 1.01)
     plt.legend()
     plt.show()
+
+    plot_damage_over_time(artifact_benefits, all_artifacts, N_steps=100)
+
+
+
+
