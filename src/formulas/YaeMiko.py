@@ -1,4 +1,4 @@
-def place_holder_optim(artifact, equpied_artifacts):
+def yae_miko_optim(artifact, equpied_artifacts):
     """ This function is a placefolder function, that takes an artifact as input, and outputs number to optimise out.
     This could for example be the damage of a specific skill """
 
