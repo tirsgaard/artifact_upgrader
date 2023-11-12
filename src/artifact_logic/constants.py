@@ -131,3 +131,9 @@ GO_conversion_dict = {
     # special cases
     None: None
 }
+
+
+### Artifact drop rate, source is https://genshin-impact.fandom.com/wiki/Loot_System/Artifact_Drop_Distribution
+SUBSTAT_COUNT_DISTRIBUTION_DOMAIN = [0, 0, 0, 0.8, 0.2]  # Index is number of substats, value is probability
+
+ARTIFACT_DROP_RATE_DOMAIN = 1.07  # 1.07 is the average number of 5* artifacts dropped per run

@@ -1,5 +1,6 @@
 import numpy as np
-from src.artifact_logic.constants import main_level_stats, sub_stat_chances, sub_stat_rolls
+from src.artifact_logic.constants import main_level_stats, sub_stat_chances, sub_stat_rolls, \
+    SUBSTAT_COUNT_DISTRIBUTION_DOMAIN
 from line_profiler_pycharm import profile
 
 class MainStat:
@@ -206,7 +207,8 @@ class Artifact:
     def gen_artifact(self):
         self.main_stat = self.gen_main(self.slot)
         # Number of starting substats
-        self.n_starting_substat = np.random.randint(3, 5)  # We assume 50-50 for 3 or 4 substats
+
+        self.n_starting_substat = np.random.choice(range(5), p=SUBSTAT_COUNT_DISTRIBUTION_DOMAIN)
         black_list = [self.main_stat.type]
         for i in range(self.n_starting_substat):
             self.substats[i] = self.gen_sub_stat(self.slot, black_list)
