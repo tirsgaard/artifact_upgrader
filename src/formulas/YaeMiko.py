@@ -44,8 +44,7 @@ def calculate_sesshou_sakura_dmg_level_3(artifact_bonuses: dict[str, float]) -> 
     total_atk = base_atk * (1 + 0.331 + art_atk_bonus + team_atk) + art_atk_flat
 
     # Final damage calculation
-    damage = 1.706 * total_atk * (1 + total_dmg_bonus) * (1 + total_ele_skill_dmg_bonus) * \
-             (1 + total_electro_dmg_bonus) * (1 + total_crit_rate * total_crit_dmg) * \
+    damage = 1.706 * total_atk * (1 + total_dmg_bonus) * (1 + total_crit_rate * total_crit_dmg) * \
              enemy_def_multiplier * (1 - total_enemy_electro_dmg_res / 2)
 
     return damage

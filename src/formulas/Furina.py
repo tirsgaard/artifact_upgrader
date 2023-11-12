@@ -1,58 +1,87 @@
-def furina_optim(artifact, equpied_artifacts):
-    """ This function is a placefolder function, that takes an artifact as input, and outputs number to optimise out.
-    This could for example be the damage of a specific skill """
+def calculate_mademoiselle_crabaletta_dmg(artifact_bonuses: dict[str, float]) -> float:
+    # Extracting artifact bonuses
+    art_hp_percent = artifact_bonuses["hp_per"] / 100
+    art_hp_flat = artifact_bonuses["hp_flat"]
+    art_crit_rate = artifact_bonuses["crit_chance"] / 100
+    art_crit_dmg = artifact_bonuses["crit_damage"] / 100
+    art_elem_mastery = artifact_bonuses["em"]
 
-    equpied_artifacts = equpied_artifacts.copy()
-    base_EM = 0
-    base_damage = 1 + 0.12
-    base_attack = 1014
-    base_flat_attack = 0
-    base_attack_per = 1.0 + 0.331
-    base_damage_increase = 1.0 + 0.209 + 0.28
-    base_hp = 15307
-    base_hp_per = 0.25
-    base_crit_rate = 0.402
-    base_crit_damage = 0.5
-    art_hp_flat = 0
+    # Constants given in the formula
+    char_hp = 15307
+    furina_hp_bonus = 25 / 100
+    furina_common_dmg_bonus = 100 / 100
+    team_hydro_dmg_bonus = 21.5 / 100
+    char_elem_mastery = 115.20
+    weapon_elem_mastery = 165.38
+    char_crit_rate = 19.2 / 100
+    fleuve_cendre_crit_rate_bonus = 16 / 100
+    default_crit_rate = 5 / 100
+    default_crit_dmg = 50 / 100
+    char_level = 90
+    enemy_level = 90
+    base_enemy_hydro_res = 10 / 100
+    kazuha_enemy_hydro_res = -40 / 100
 
-    if artifact is None:
-        pass
-    elif artifact.slot == "flower":
-        equpied_artifacts["flower"] = artifact
-    elif artifact.slot == "plume":
-        equpied_artifacts["plume"] = artifact
-    elif artifact.slot == "sands":
-        equpied_artifacts["sands"] = artifact
-    elif artifact.slot == "goblet":
-        equpied_artifacts["goblet"] = artifact
-    elif artifact.slot == "circlet":
-        equpied_artifacts["circlet"] = artifact
+    # Derived calculations
+    total_hp = char_hp * (1 + 400 * 0.0035 + art_hp_percent + furina_hp_bonus) + art_hp_flat
+    ele_skill_dmg_bonus_from_hp = min(0.007 * total_hp * 0.001, 28 / 100)
+    total_ele_skill_dmg_bonus = ele_skill_dmg_bonus_from_hp + 20 / 100 + 25 / 100 + 25 / 100
+    total_dmg_bonus = furina_common_dmg_bonus + total_ele_skill_dmg_bonus + team_hydro_dmg_bonus
+    team_elem_mastery_bonus = 0.04 / 100 * (char_elem_mastery + weapon_elem_mastery + art_elem_mastery)
+    total_crit_rate = max(min(char_crit_rate + default_crit_rate + fleuve_cendre_crit_rate_bonus + art_crit_rate, 1), 0)
+    total_crit_dmg = default_crit_dmg + art_crit_dmg
+    enemy_def_multiplier = (char_level + 100) / (char_level + 100 + enemy_level + 100)
+    total_enemy_hydro_res = base_enemy_hydro_res + kazuha_enemy_hydro_res
 
-    for art in equpied_artifacts.values():
-        # Get values from artifact
-        stat_dict = art.get_full_stats()
-        # Add values to base values
-        base_EM += stat_dict["em"]
-        base_damage += stat_dict["electro_per"] / 100.
-        base_flat_attack += stat_dict["att_flat"]
-        base_attack_per += stat_dict["att_per"] / 100.
-        base_crit_rate += stat_dict["crit_chance"] / 100.
-        base_crit_damage += stat_dict["crit_damage"] / 100.
-        art_hp_flat += stat_dict["hp_flat"]
-        base_hp_per += stat_dict["hp_per"] / 100.
-
-    # Add set damage
-    base_damage_increase += 0.7
-
-    # Calculate damage
-    total_damage = base_damage_increase
-    total_crit_rate = base_crit_rate
-    total_crit_damage = base_crit_damage
-    total_hp = base_hp * (1 + base_hp_per + 350 * 0.004) + art_hp_flat
-
-    # Damage for ability
-    total_hydro_res = 0.1 - 0.4
-    enemy_def_multi = 0.5 * (1 - total_hydro_res / 2)
-    damage = 0.149 * total_hp * 1.4 * (1 + total_damage) * (1.0 + total_crit_rate * total_crit_damage) * enemy_def_multi
+    # Final damage calculation
+    damage = 0.149 * total_hp * 1.4 * (1 + total_dmg_bonus) * (1 + total_crit_rate * total_crit_dmg) * \
+             enemy_def_multiplier * (1 - total_enemy_hydro_res / 2)
 
     return damage
+
+
+def calculate_multi_object_target_damage(artifact_bonuses: dict[str, float]) -> float:
+    # Extracting artifact bonuses
+    art_hp_per = artifact_bonuses["hp_per"] / 100
+    art_hp_flat = artifact_bonuses["hp_flat"]
+    art_crit_dmg = artifact_bonuses["crit_damage"] / 100
+    art_crit_rate = artifact_bonuses["crit_chance"] / 100
+    art_elem_mastery = artifact_bonuses["em"]
+
+    # Constants given in the formula
+    char_hp = 15307
+    char_crit_rate = 19.2 / 100
+    default_crit_rate = 5 / 100
+    ele_skill_crit_rate_bonus = 16 / 100
+    default_crit_dmg = 50 / 100
+    char_level = 90
+    enemy_level = 90
+    base_enemy_hydro_dmg_res = 10 / 100
+    kazuha_enemy_hydro_dmg_res = -40 / 100
+    furina_common_dmg_bonus = 100 / 100
+    furina_hp_bonus = 25 / 100
+    salon_members_multiplier = 1.4
+    enemy_def_multiplier = (char_level + 100) / (char_level + 100 + enemy_level + 100)
+
+    # Derived calculations
+    total_hp = char_hp * (1 + 0.35 * 400 / 100 + art_hp_per + furina_hp_bonus) + art_hp_flat
+    total_enemy_hydro_dmg_res = base_enemy_hydro_dmg_res + kazuha_enemy_hydro_dmg_res
+    team_hydro_dmg_bonus = 0.04 / 100 * (115.20 + 165.38 + art_elem_mastery)
+    total_hydro_dmg_bonus = team_hydro_dmg_bonus
+    ele_skill_dmg_bonus = min(0.7 * total_hp * 0.001, 28 / 100)
+    total_ele_skill_dmg_bonus = ele_skill_dmg_bonus + 20 / 100 + 25 / 100 + 25 / 100
+    total_common_dmg_bonus = furina_common_dmg_bonus
+    total_dmg_bonus = total_common_dmg_bonus + total_ele_skill_dmg_bonus + total_hydro_dmg_bonus
+    total_crit_rate = max(min(char_crit_rate + default_crit_rate + ele_skill_crit_rate_bonus + art_crit_rate, 1), 0)
+    total_crit_dmg = default_crit_dmg + art_crit_dmg
+
+    # Individual character damage calculations
+    mademoiselle_crabaletta_dmg = 0.149 * total_hp * salon_members_multiplier * (1 + total_dmg_bonus) * (1 + total_crit_rate * total_crit_dmg) * enemy_def_multiplier * (1 - total_enemy_hydro_dmg_res / 2)
+    surintendante_chevalmarin_dmg = 0.058 * total_hp * salon_members_multiplier * (1 + total_dmg_bonus) * (1 + total_crit_rate * total_crit_dmg) * enemy_def_multiplier * (1 - total_enemy_hydro_dmg_res / 2)
+    gentilhomme_usher_dmg = 0.107 * total_hp * salon_members_multiplier * (1 + total_dmg_bonus) * (1 + total_crit_rate * total_crit_dmg) * enemy_def_multiplier * (1 - total_enemy_hydro_dmg_res / 2)
+
+    # Total damage calculation
+    total_damage = mademoiselle_crabaletta_dmg + 2 * surintendante_chevalmarin_dmg + gentilhomme_usher_dmg
+
+    return total_damage
+
