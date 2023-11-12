@@ -137,3 +137,4 @@ GO_conversion_dict = {
 SUBSTAT_COUNT_DISTRIBUTION_DOMAIN = [0, 0, 0, 0.8, 0.2]  # Index is number of substats, value is probability
 
 ARTIFACT_DROP_RATE_DOMAIN = 1.07  # 1.07 is the average number of 5* artifacts dropped per run
+ARTIFACT_DROP_SLOT_RATE = (2*5)/ARTIFACT_DROP_RATE_DOMAIN

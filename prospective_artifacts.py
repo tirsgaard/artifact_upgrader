@@ -9,6 +9,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
+    np.random.seed(1)
     # Load artifacts from JSON
     path = r"C:\Users\rasmu\Downloads\Inventory_KameraV1.3.9\GenshinData\genshinData_GOOD_2023_11_12_14_48.json"
     worn_artifacts = get_art_from_JSON(path, location="Furina")
