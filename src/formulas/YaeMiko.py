@@ -1,57 +1,51 @@
 from collections import Counter
 
 
-def yae_miko_optim(new_artifact, equipped_artifacts):
-    """ This function is a placefolder function, that takes an artifact as input, and outputs number to optimise out.
-    This could for example be the damage of a specific skill """
+def calculate_sesshou_sakura_dmg_level_3(artifact_bonuses: dict[str, float]) -> float:
+    # Extracting artifact bonuses
+    art_atk_bonus = artifact_bonuses["att_per"] / 100
+    art_atk_flat = artifact_bonuses["att_flat"]
+    art_crit_dmg = artifact_bonuses["crit_damage"] / 100
+    art_crit_rate = artifact_bonuses["crit_chance"] / 100
+    art_elem_mastery = artifact_bonuses["em"]
+    art_electro_dmg_bonus = artifact_bonuses["electro_per"] / 100
 
-    equipped_artifacts = equipped_artifacts.copy()
-    base_EM = 0
-    base_damage = 1 + 0.12
-    base_attack = 1014
-    base_flat_attack = 0
-    base_attack_per = 1.0 + 0.331
-    base_damage_increase = 0.0 + 0.48 + 0.317
-    base_crit_rate = 0.242
-    base_crit_damage = 0.5
+    # Constants given in the formula
+    char_atk = 339.63
+    weapon_atk = 674.33
+    sangonomiya_kokomi_atk_bonus = 48 / 100
+    furina_common_dmg_bonus = 100 / 100
+    electro_damage_bonus_skyward_atlas = 12 / 100
+    char_elem_mastery = 115.20
+    weapon_elem_mastery = 165.38
+    char_crit_rate = 19.2 / 100
+    default_crit_rate = 5 / 100
+    default_crit_dmg = 50 / 100
+    char_level = 90
+    enemy_level = 90
+    base_enemy_electro_dmg_res = 10 / 100
+    kazuha_enemy_electro_dmg_res = -40 / 100
 
-    if new_artifact is None:
-        pass
-    elif new_artifact.slot == "flower":
-        equipped_artifacts["flower"] = new_artifact
-    elif new_artifact.slot == "plume":
-        equipped_artifacts["plume"] = new_artifact
-    elif new_artifact.slot == "sands":
-        equipped_artifacts["sands"] = new_artifact
-    elif new_artifact.slot == "goblet":
-        equipped_artifacts["goblet"] = new_artifact
-    elif new_artifact.slot == "circlet":
-        equipped_artifacts["circlet"] = new_artifact
+    # Derived calculations
+    total_enemy_electro_dmg_res = base_enemy_electro_dmg_res + kazuha_enemy_electro_dmg_res
+    enemy_def_multiplier = (char_level + 100) / (char_level + 100 + enemy_level + 100)
+    total_crit_dmg = default_crit_dmg + art_crit_dmg
+    total_crit_rate = max(min(char_crit_rate + default_crit_rate + art_crit_rate, 1), 0)
+    team_electro_dmg_bonus = (0.04/100)*(char_elem_mastery + weapon_elem_mastery + art_elem_mastery)
+    total_electro_dmg_bonus = electro_damage_bonus_skyward_atlas + art_electro_dmg_bonus + team_electro_dmg_bonus
+    total_elemental_mastery = art_elem_mastery
+    ele_skill_dmg_bonus = total_elemental_mastery * (0.15/100)
+    total_ele_skill_dmg_bonus = ele_skill_dmg_bonus + (20./100) + (25./100) + (25./100)
+    team_common_dmg_bonus = furina_common_dmg_bonus
+    total_common_dmg_bonus = team_common_dmg_bonus
+    total_dmg_bonus = total_common_dmg_bonus + total_ele_skill_dmg_bonus + total_electro_dmg_bonus
+    team_atk = sangonomiya_kokomi_atk_bonus
+    base_atk = char_atk + weapon_atk
+    total_atk = base_atk * (1 + 0.331 + art_atk_bonus + team_atk) + art_atk_flat
 
-    for art in equipped_artifacts.values():
-        # Get values from artifact
-        stat_dict = art.get_full_stats()
-        # Add values to base values
-        base_EM += stat_dict["em"]
-        base_damage += stat_dict["electro_per"] / 100.
-        base_flat_attack += stat_dict["att_flat"]
-        base_attack_per += stat_dict["att_per"] / 100.
-        base_crit_rate += stat_dict["crit_chance"] / 100.
-        base_crit_damage += stat_dict["crit_damage"] / 100.
-
-    # Add set damage
-    base_attack_per += 0.18
-    base_damage += 0.15
-
-    # Calculate damage
-    total_attack = base_attack * base_attack_per + base_flat_attack
-    total_damage = base_damage
-    total_crit_rate = base_crit_rate
-    total_crit_damage = base_crit_damage
-
-    # Damage for ability
-    enemy_def_multi = 0.5 * (1 - 0.1)
-    damage = 1.706 * total_attack * (total_damage + (base_EM * 0.0015)) * (
-                1 + total_crit_rate * total_crit_damage) * enemy_def_multi
+    # Final damage calculation
+    damage = 1.706 * total_atk * (1 + total_dmg_bonus) * (1 + total_ele_skill_dmg_bonus) * \
+             (1 + total_electro_dmg_bonus) * (1 + total_crit_rate * total_crit_dmg) * \
+             enemy_def_multiplier * (1 - total_enemy_electro_dmg_res / 2)
 
     return damage
