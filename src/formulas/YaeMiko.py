@@ -1,8 +1,11 @@
-def yae_miko_optim(artifact, equpied_artifacts):
+from collections import Counter
+
+
+def yae_miko_optim(new_artifact, equipped_artifacts):
     """ This function is a placefolder function, that takes an artifact as input, and outputs number to optimise out.
     This could for example be the damage of a specific skill """
 
-    equpied_artifacts = equpied_artifacts.copy()
+    equipped_artifacts = equipped_artifacts.copy()
     base_EM = 0
     base_damage = 1 + 0.12
     base_attack = 1014
@@ -12,20 +15,20 @@ def yae_miko_optim(artifact, equpied_artifacts):
     base_crit_rate = 0.242
     base_crit_damage = 0.5
 
-    if artifact is None:
+    if new_artifact is None:
         pass
-    elif artifact.slot == "flower":
-        equpied_artifacts["flower"] = artifact
-    elif artifact.slot == "plume":
-        equpied_artifacts["plume"] = artifact
-    elif artifact.slot == "sands":
-        equpied_artifacts["sands"] = artifact
-    elif artifact.slot == "goblet":
-        equpied_artifacts["goblet"] = artifact
-    elif artifact.slot == "circlet":
-        equpied_artifacts["circlet"] = artifact
+    elif new_artifact.slot == "flower":
+        equipped_artifacts["flower"] = new_artifact
+    elif new_artifact.slot == "plume":
+        equipped_artifacts["plume"] = new_artifact
+    elif new_artifact.slot == "sands":
+        equipped_artifacts["sands"] = new_artifact
+    elif new_artifact.slot == "goblet":
+        equipped_artifacts["goblet"] = new_artifact
+    elif new_artifact.slot == "circlet":
+        equipped_artifacts["circlet"] = new_artifact
 
-    for art in equpied_artifacts.values():
+    for art in equipped_artifacts.values():
         # Get values from artifact
         stat_dict = art.get_full_stats()
         # Add values to base values
