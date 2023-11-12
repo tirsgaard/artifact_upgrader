@@ -1,8 +1,11 @@
 from collections import Counter
+from typing import Optional
+
+from src.artifact_logic.artifact import Artifact
 
 
-def prepare_artifacts(new_artifact, equipped_artifacts):
-
+def prepare_artifacts(new_artifact: Optional[Artifact], equipped_artifacts: dict[str, Artifact]) -> Counter[str, float]:
+    equipped_artifacts = equipped_artifacts.copy()
     if new_artifact is None:
         pass
     elif new_artifact.slot == "flower":
