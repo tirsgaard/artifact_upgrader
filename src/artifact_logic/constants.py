@@ -132,6 +132,34 @@ GO_conversion_dict = {
     None: None
 }
 
+stat_GO_to_GCSim = {"hp_per": "hp%",
+                   "hp_flat": "hp",
+                   "att_per": "atk%",
+                   "att_flat": "atk",
+                   "def_per": "def%",
+                   "def_flat": "def",
+                   "er": "er",
+                   "em": "em",
+                   "crit_chance": "cr",
+                   "crit_damage": "cd",
+                   "healing": "heal",
+                   "phys_dmg": "phys%",
+                   "pyro_dmg": "pyro%",
+                   "hydro_dmg": "hydro%",
+                   "dendro_dmg": "dendro%",
+                   "electro_dmg": "electro%",
+                   "anemo_dmg": "anemo%",
+                   "cryo_dmg": "cryo%",
+                   "geo_dmg": "geo%",
+                    "phys_per": "phys%",
+                    "pyro_per": "pyro%",
+                    "hydro_per": "hydro%",
+                    "dendro_per": "dendro%",
+                    "electro_per": "electro%",
+                    "anemo_per": "anemo%",
+                    "cryo_per": "cryo%",
+                    "geo_per": "geo%"}
+
 
 ### Artifact drop rate, source is https://genshin-impact.fandom.com/wiki/Loot_System/Artifact_Drop_Distribution
 SUBSTAT_COUNT_DISTRIBUTION_DOMAIN = [0, 0, 0, 0.8, 0.2]  # Index is number of substats, value is probability

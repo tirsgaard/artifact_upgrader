@@ -2,8 +2,9 @@ import numpy as np
 
 from src.artifact_logic.artifact import Artifact
 from src.artifact_progression import plot_damage_over_time
+from src.call_gcsim import GCSimConfig
 from src.formulas.Furina import calculate_mademoiselle_crabaletta_dmg
-from src.formulas.default import prepare_artifacts
+from src.formulas.default import prepare_artifacts, convert_to_GCSim
 from src.io.load_from_GO import get_art_from_JSON
 from tqdm import tqdm
 import matplotlib.pyplot as plt
@@ -12,22 +13,28 @@ if __name__ == "__main__":
     np.random.seed(1)
     # Load artifacts from JSON
     path = r"C:\Users\rasmu\Downloads\Inventory_KameraV1.3.9\GenshinData\genshinData_GOOD_2023_11_12_14_48.json"
-    worn_artifacts = get_art_from_JSON(path, location="Furina")
+    char = "Furina"
+    worn_artifacts = get_art_from_JSON(path, char)
     equipped_artifacts = {}
     for art in worn_artifacts:
         equipped_artifacts[art.slot] = art
 
     print("Original damage:")
-
-    optim_func = lambda x: calculate_mademoiselle_crabaletta_dmg(prepare_artifacts(x, equipped_artifacts))
+    gcsim_path = r"C:\Users\rasmu\Downloads\gcsim\gcsim.exe"
+    gcsim_input_path = r"C:\Users\rasmu\Downloads\gcsim\config.txt"
+    gcsim_output_path = r"C:\Users\rasmu\Downloads\gcsim\config_temp.txt"
+    config = GCSimConfig(gcsim_path, gcsim_input_path, gcsim_output_path)
+    config.modify_iterations(1000)
+    #optim_func = lambda x: calculate_mademoiselle_crabaletta_dmg(prepare_artifacts(x, equipped_artifacts))
+    optim_func = lambda x: config.evaluate_stats("nilou", convert_to_GCSim(prepare_artifacts(x, equipped_artifacts)))
     current_damage = optim_func(None)
     print(current_damage)
 
     all_artifacts = ["flower", "plume", "sands", "goblet", "circlet"]
-    N = 10 ** 4
+    N = 10 ** 2
 
     artifact_benefits = np.zeros((len(all_artifacts), N))
-    for j, artifact_type in tqdm(enumerate(all_artifacts)):
+    for j, artifact_type in tqdm(enumerate(all_artifacts), total=len(all_artifacts)):
         for i in range(N):
             art = Artifact(artifact_type)
             art.gen_artifact()
