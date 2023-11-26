@@ -123,6 +123,8 @@ class GCSimConfig:
             for line in chars[char]:
                 if line.split(" ")[1] == "char":
                     level = line
+                elif len(line.split(" ")) < 3:
+                    continue
                 elif "weapon" in line.split(" ")[2]:
                     weapon = line
                 elif "set" in line.split(" ")[2]:
@@ -166,7 +168,7 @@ class GCSimConfig:
             rot_start = line_start not in char_name_list
             rot_start &= "options" not in line_start
             rot_start &= "char" not in line_start
-            rot_start &= "target" in line_start or "energy" in line_start or "active " in line_start or "for " in line_start
+            rot_start &= "target" in line_start or "energy" in line_start or "active" in line_start or "for " in line_start
             if rot_start:
                 line_start = i
                 break

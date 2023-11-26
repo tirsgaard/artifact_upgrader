@@ -12,8 +12,9 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
     np.random.seed(1)
     # Load artifacts from JSON
-    path = r"C:\Users\rasmu\Downloads\Inventory_KameraV1.3.9\GenshinData\genshinData_GOOD_2023_11_12_14_48.json"
-    char = "Furina"
+    #path = r"C:\Users\rasmu\Downloads\Inventory_KameraV1.3.9\GenshinData\genshinData_GOOD_2023_11_12_14_48.json"
+    path = r"C:\Users\rasmu\Downloads\gcsim\genshinData_GOOD_2023_11_25_21_37.json"
+    char = "Ganyu"
     worn_artifacts = get_art_from_JSON(path, char)
     equipped_artifacts = {}
     for art in worn_artifacts:
@@ -21,17 +22,16 @@ if __name__ == "__main__":
 
     print("Original damage:")
     gcsim_path = r"C:\Users\rasmu\Downloads\gcsim\gcsim.exe"
-    gcsim_input_path = r"C:\Users\rasmu\Downloads\gcsim\config.txt"
+    gcsim_input_path = r"C:\Users\rasmu\Downloads\gcsim\config_peter.txt"
     gcsim_output_path = r"C:\Users\rasmu\Downloads\gcsim\config_temp.txt"
     config = GCSimConfig(gcsim_path, gcsim_input_path, gcsim_output_path)
-    config.modify_iterations(1000)
-    #optim_func = lambda x: calculate_mademoiselle_crabaletta_dmg(prepare_artifacts(x, equipped_artifacts))
-    optim_func = lambda x: config.evaluate_stats("nilou", convert_to_GCSim(prepare_artifacts(x, equipped_artifacts)))
+    config.modify_iterations(10)
+    optim_func = lambda x: config.evaluate_stats("ganyu", convert_to_GCSim(prepare_artifacts(x, equipped_artifacts)))
     current_damage = optim_func(None)
     print(current_damage)
 
     all_artifacts = ["flower", "plume", "sands", "goblet", "circlet"]
-    N = 10 ** 2
+    N = 10 ** 3
 
     artifact_benefits = np.zeros((len(all_artifacts), N))
     for j, artifact_type in tqdm(enumerate(all_artifacts), total=len(all_artifacts)):
@@ -52,7 +52,8 @@ if __name__ == "__main__":
     plt.legend()
     plt.show()
 
-    plot_damage_over_time(artifact_benefits, all_artifacts, N_steps=100)
+    artifact_benefits_per = 100*artifact_benefits / current_damage
+    plot_damage_over_time(artifact_benefits_per, all_artifacts, N_steps=100)
 
 
 
